@@ -1,16 +1,14 @@
 trigger: none
 
-
 pool:
-  none: todo-infra-agent-pool
+  name: todo-infra-agent-pool
 
+steps:
 
 - task: TerraformInstaller@1
   inputs:
     terraformVersion: 'latest'
 
-
-steps:
 - task: TerraformTask@5
   inputs:
     provider: 'azurerm'
@@ -31,11 +29,11 @@ steps:
     customCommand: 'fmt'
     environmentServiceNameAzureRM: 'sp-1'
 
-  - task: TerraformTask@5
-    inputs:
-      provider: 'azurerm'
-      command: 'validate'
-      workingDirectory: '$(System.DefaultWorkingDirectory)\Todo-infra-setup'
+- task: TerraformTask@5
+  inputs:
+    provider: 'azurerm'
+    command: 'validate'
+    workingDirectory: '$(System.DefaultWorkingDirectory)\Todo-infra-setup'
 
 - task: TerraformTask@5
   inputs:
@@ -50,16 +48,3 @@ steps:
     command: 'apply'
     workingDirectory: '$(System.DefaultWorkingDirectory)\Todo-infra-setup'
     environmentServiceNameAzureRM: 'sp-1'
-
-
-
-  
-
-
-
-
-
-
-
-
-
