@@ -16,12 +16,12 @@ steps:
     provider: 'azurerm'
     command: 'init'
     workingDirectory: '$(System.DefaultWorkingDirectory)/Todo-infra-setup'
-    backendServiceArm: 'SP-1-Federated-Cred.'
+    backendServiceArm: 'SP-1-Federated-Cred'
     backendAzureRmResourceGroupName: 'test-rg'
     backendAzureRmStorageAccountName: 'teststs20234'
     backendAzureRmContainerName: 'statefile-container1'
     backendAzureRmKey: 'terraform.tfstate'
-    environmentServiceNameAzureRM: 'SP-1-Federated-Cred.'
+    environmentServiceNameAzureRM: 'SP-1-Federated-Cred'
 
 # Step 3: Terraform Format
 - task: TerraformTask@5
@@ -31,7 +31,7 @@ steps:
     customCommand: 'fmt'
     workingDirectory: '$(System.DefaultWorkingDirectory)/Todo-infra-setup'
     outputTo: 'console'
-    environmentServiceNameAzureRM: 'SP-1-Federated-Cred.'
+    environmentServiceNameAzureRM: 'SP-1-Federated-Cred'
 
 # Step 4: Terraform Validate
 - task: TerraformTask@5
@@ -39,7 +39,7 @@ steps:
     provider: 'azurerm'
     command: 'validate'
     workingDirectory: '$(System.DefaultWorkingDirectory)/Todo-infra-setup'
-    environmentServiceNameAzureRM: 'SP-1-Federated-Cred.'
+    environmentServiceNameAzureRM: 'SP-1-Federated-Cred'
 
 # Step 5: Terraform Plan
 - task: TerraformTask@5
@@ -47,7 +47,7 @@ steps:
     provider: 'azurerm'
     command: 'plan'
     workingDirectory: '$(System.DefaultWorkingDirectory)/Todo-infra-setup'
-    environmentServiceNameAzureRM: 'SP-1-Federated-Cred.'
+    environmentServiceNameAzureRM: 'SP-1-Federated-Cred'
 
 # Step 6: Terraform Apply
 - task: TerraformTask@5
@@ -55,4 +55,4 @@ steps:
     provider: 'azurerm'
     command: 'apply'
     workingDirectory: '$(System.DefaultWorkingDirectory)/Todo-infra-setup'
-    environmentServiceNameAzureRM: 'SP-1-Federated-Cred.'
+    environmentServiceNameAzureRM: 'SP-1-Federated-Cred'
