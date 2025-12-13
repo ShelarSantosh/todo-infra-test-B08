@@ -5,46 +5,53 @@ pool:
 
 steps:
 
+# Install Terraform
 - task: TerraformInstaller@1
   inputs:
     terraformVersion: 'latest'
 
+# Terraform Init
 - task: TerraformTask@5
   inputs:
     provider: 'azurerm'
     command: 'init'
-    workingDirectory: '$(System.DefaultWorkingDirectory)\Todo-infra-setup'
-    backendServiceArm: 'sp-1'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/Todo-infra-setup'
     backendAzureRmResourceGroupName: 'test-rg'
     backendAzureRmStorageAccountName: 'teststs20234'
     backendAzureRmContainerName: 'statefile-container1'
     backendAzureRmKey: 'terraform.tfstate'
+    environmentServiceNameAzureRM: 'sp-1'
 
+# Terraform Format
 - task: TerraformTask@5
   inputs:
     provider: 'azurerm'
     command: 'custom'
-    workingDirectory: '$(System.DefaultWorkingDirectory)\Todo-infra-setup'
-    outputTo: 'console'
     customCommand: 'fmt'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/Todo-infra-setup'
+    outputTo: 'console'
     environmentServiceNameAzureRM: 'sp-1'
 
+# Terraform Validate
 - task: TerraformTask@5
   inputs:
     provider: 'azurerm'
     command: 'validate'
-    workingDirectory: '$(System.DefaultWorkingDirectory)\Todo-infra-setup'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/Todo-infra-setup'
+    environmentServiceNameAzureRM: 'sp-1'
 
+# Terraform Plan
 - task: TerraformTask@5
   inputs:
     provider: 'azurerm'
     command: 'plan'
-    workingDirectory: '$(System.DefaultWorkingDirectory)\Todo-infra-setup'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/Todo-infra-setup'
     environmentServiceNameAzureRM: 'sp-1'
 
+# Terraform Apply
 - task: TerraformTask@5
   inputs:
     provider: 'azurerm'
     command: 'apply'
-    workingDirectory: '$(System.DefaultWorkingDirectory)\Todo-infra-setup'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/Todo-infra-setup'
     environmentServiceNameAzureRM: 'sp-1'
