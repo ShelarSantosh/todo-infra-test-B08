@@ -1,21 +1,20 @@
-trigger:
-  branches:
-    include:
-      - main
+trigger: none
 
 pool:
   name: todo-infra-agent-pool
 
 steps:
+# Step 1: Install Terraform
 - task: TerraformInstaller@1
   inputs:
     terraformVersion: '1.14.2'
 
+# Step 2: Terraform Init
 - task: TerraformTask@5
   inputs:
     provider: 'azurerm'
     command: 'init'
-    workingDirectory: '"C:\\todo-infra-agent1\\Todo-infra-setup"'
+    workingDirectory: 'C:\\todo-infra-agent1\\Todo-infra-setup'
     backendServiceArm: 'SP-1-Federated-Cred'
     backendAzureRmResourceGroupName: 'test-rg'
     backendAzureRmStorageAccountName: 'teststs20234'
@@ -23,17 +22,37 @@ steps:
     backendAzureRmKey: 'terraform.tfstate'
     useAzureADAuthentication: true
 
+# Step 3: Terraform fmt
+- task: TerraformTask@5
+  inputs:
+    provider: 'azurerm'
+    command: 'custom'
+    workingDirectory: 'C:\\todo-infra-agent1\\Todo-infra-setup'
+    customCommand: 'fmt'
+    outputTo: 'console'
+    environmentServiceNameAzureRM: 'SP-1-Federated-Cred'
+
+# Step 4: Terraform validate
+- task: TerraformTask@5
+  inputs:
+    provider: 'azurerm'
+    command: 'validate'
+    workingDirectory: 'C:\\todo-infra-agent1\\Todo-infra-setup'
+    environmentServiceNameAzureRM: 'SP-1-Federated-Cred'
+
+# Step 5: Terraform plan
 - task: TerraformTask@5
   inputs:
     provider: 'azurerm'
     command: 'plan'
-    workingDirectory: '"C:\\todo-infra-agent1\\Todo-infra-setup"'
+    workingDirectory: 'C:\\todo-infra-agent1\\Todo-infra-setup'
     environmentServiceNameAzureRM: 'SP-1-Federated-Cred'
 
+# Step 6: Terraform apply
 - task: TerraformTask@5
   inputs:
     provider: 'azurerm'
     command: 'apply'
-    workingDirectory: '"C:\\todo-infra-agent1\\Todo-infra-setup"'
+    workingDirectory: 'C:\\todo-infra-agent1\\Todo-infra-setup'
     environmentServiceNameAzureRM: 'SP-1-Federated-Cred'
     args: '-auto-approve'
