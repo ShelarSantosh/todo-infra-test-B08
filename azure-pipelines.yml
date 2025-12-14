@@ -1,54 +1,46 @@
-trigger: none
+trigger:
+  branches:
+    include:
+      - main  # change if your branch is different
 
 pool:
-  name: todo-infra-agent-pool
+  name: todo-infra-agent-pool  # your self-hosted agent
 
 steps:
-# Install Terraform
+
+# Step 1: Install Terraform
 - task: TerraformInstaller@1
   inputs:
     terraformVersion: 'latest'
 
-# Terraform Init (Backend)
+# Step 2: Terraform Init (backend using federated credential)
 - task: TerraformTask@5
   inputs:
     provider: 'azurerm'
     command: 'init'
     workingDirectory: '$(System.DefaultWorkingDirectory)/Todo-infra-setup'
-    backendServiceArm: 'sp-2'
+    backendServiceArm: 'SP-1-Federated-Cred'       # Your service connection using SP-1
     backendAzureRmResourceGroupName: 'test-rg'
     backendAzureRmStorageAccountName: 'teststs20234'
     backendAzureRmContainerName: 'statefile-container1'
     backendAzureRmKey: 'terraform.tfstate'
+    ensureBackend: true
+    useAzureADAuthentication: true                 # <-- enables OIDC / federated login
+    allowTelemetryCollection: false
 
-# Terraform fmt
-- task: TerraformTask@5
-  inputs:
-    provider: 'azurerm'
-    command: 'custom'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/Todo-infra-setup'
-    customCommand: 'fmt'
-
-# Terraform validate
-- task: TerraformTask@5
-  inputs:
-    provider: 'azurerm'
-    command: 'validate'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/Todo-infra-setup'
-
-# Terraform plan
+# Step 3: Terraform Plan
 - task: TerraformTask@5
   inputs:
     provider: 'azurerm'
     command: 'plan'
     workingDirectory: '$(System.DefaultWorkingDirectory)/Todo-infra-setup'
-    environmentServiceNameAzureRM: 'sp-2'
+    environmentServiceNameAzureRM: 'SP-1-Federated-Cred'
 
-# Terraform apply
+# Step 4: Terraform Apply (optional, only if needed)
 - task: TerraformTask@5
   inputs:
     provider: 'azurerm'
     command: 'apply'
     workingDirectory: '$(System.DefaultWorkingDirectory)/Todo-infra-setup'
-    environmentServiceNameAzureRM: 'sp-2'
-    commandOptions: '-auto-approve'
+    environmentServiceNameAzureRM: 'SP-1-Federated-Cred'
+    args: '-auto-approve'
