@@ -14,7 +14,7 @@ steps:
   inputs:
     provider: 'azurerm'
     command: 'init'
-    workingDirectory: 'C:\\todo-infra-agent1\\Todo-infra-setup'
+    workingDirectory: 'C:\\todo-infra-agent1\\_work\\1\\s\\Todo-infra-setup'
     backendServiceArm: 'SP-1-Federated-Cred'
     backendAzureRmResourceGroupName: 'test-rg'
     backendAzureRmStorageAccountName: 'teststs20234'
@@ -27,7 +27,7 @@ steps:
   inputs:
     provider: 'azurerm'
     command: 'custom'
-    workingDirectory: 'C:\\todo-infra-agent1\\Todo-infra-setup'
+    workingDirectory: 'C:\\todo-infra-agent1\\_work\\1\\s\\Todo-infra-setup'
     customCommand: 'fmt'
     outputTo: 'console'
     environmentServiceNameAzureRM: 'SP-1-Federated-Cred'
@@ -37,7 +37,7 @@ steps:
   inputs:
     provider: 'azurerm'
     command: 'validate'
-    workingDirectory: 'C:\\todo-infra-agent1\\Todo-infra-setup'
+    workingDirectory: 'C:\\todo-infra-agent1\\_work\\1\\s\\Todo-infra-setup'
     environmentServiceNameAzureRM: 'SP-1-Federated-Cred'
 
 # Step 5: Terraform plan
@@ -45,7 +45,7 @@ steps:
   inputs:
     provider: 'azurerm'
     command: 'plan'
-    workingDirectory: 'C:\\todo-infra-agent1\\Todo-infra-setup'
+    workingDirectory: 'C:\\todo-infra-agent1\\_work\\1\\s\\Todo-infra-setup'
     environmentServiceNameAzureRM: 'SP-1-Federated-Cred'
 
 # Step 6: Terraform apply
@@ -53,6 +53,6 @@ steps:
   inputs:
     provider: 'azurerm'
     command: 'apply'
-    workingDirectory: 'C:\\todo-infra-agent1\\Todo-infra-setup'
+    workingDirectory: 'C:\\todo-infra-agent1\\_work\\1\\s\\Todo-infra-setup'
     environmentServiceNameAzureRM: 'SP-1-Federated-Cred'
     args: '-auto-approve'
