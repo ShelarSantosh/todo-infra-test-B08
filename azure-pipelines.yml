@@ -1,28 +1,53 @@
 trigger: none
 
-pool:
-  name: todo-infra-agent-pool
+pool: 
+todo-infra-agent-pool
 
-steps:
+steps: 
+
 - task: TerraformInstaller@1
   inputs:
-    terraformVersion: '1.14.2'
+    terraformVersion: 'latest'
 
 - task: TerraformTask@5
   inputs:
     provider: 'azurerm'
     command: 'init'
-    workingDirectory: '"C:\\Users\\Admin\\OneDrive\\Desktop\\todo-infra agent1\\Todo-infra-setup"'
-    backendServiceArm: 'SP-1-Federated-Cred'
-    backendAzureRmResourceGroupName: 'test-rg'
+    workingDirectory: '$(System.DefaultWorkingDirectory)\Todo-infra-setup'
+    backendServiceArm: 'sp-1'
     backendAzureRmStorageAccountName: 'teststs20234'
     backendAzureRmContainerName: 'statefile-container1'
     backendAzureRmKey: 'terraform.tfstate'
-    useAzureADAuthentication: true
+
+- task: TerraformTask@5
+  inputs:
+    provider: 'azurerm'
+    command: 'custom'
+    workingDirectory: '$(System.DefaultWorkingDirectory)\Todo-infra-setup'
+    outputTo: 'console'
+    customCommand: 'fmt'
+    environmentServiceNameAzureRM: 'sp-1'
+
+- task: TerraformTask@5
+  inputs:
+    provider: 'azurerm'
+    command: 'validate'
+    workingDirectory: '$(System.DefaultWorkingDirectory)\Todo-infra-setup'
 
 - task: TerraformTask@5
   inputs:
     provider: 'azurerm'
     command: 'plan'
-    workingDirectory: '"C:\\Users\\Admin\\OneDrive\\Desktop\\todo-infra agent1\\Todo-infra-setup"'
-    environmentServiceNameAzureRM: 'SP-1-Federated-Cred'
+    workingDirectory: '$(System.DefaultWorkingDirectory)\Todo-infra-setup'
+    environmentServiceNameAzureRM: 'sp-1'
+
+- task: TerraformTask@5
+  inputs:
+    provider: 'azurerm'
+    command: 'apply'
+    workingDirectory: '$(System.DefaultWorkingDirectory)\Todo-infra-setup'
+    environmentServiceNameAzureRM: 'sp-1'
+
+
+
+
