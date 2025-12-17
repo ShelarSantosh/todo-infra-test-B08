@@ -3,48 +3,63 @@ trigger: none
 pool:
   name: todo-infra-agent-pool
 
+variables:
+  working_path: '$(System.DefaultWorkingDirectory)/Todo-infra-setup'
+  service_connection: 'sp-1'
+
 steps:
 
+# Install Terraform
 - task: TerraformInstaller@1
   inputs:
     terraformVersion: 'latest'
 
+# Terraform Init
 - task: TerraformTask@5
+  displayName: 'Terraform Init'
   inputs:
     provider: 'azurerm'
     command: 'init'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/Todo-infra-setup'
-    backendServiceArm: 'sp-1'
+    workingDirectory: '$(working_path)'
+    backendServiceArm: '$(service_connection)'
     backendAzureRmStorageAccountName: 'teststs20234'
     backendAzureRmContainerName: 'statefile-container1'
     backendAzureRmKey: 'terraform.tfstate'
 
+# Terraform Fmt
 - task: TerraformTask@5
+  displayName: 'Terraform Format'
   inputs:
     provider: 'azurerm'
     command: 'custom'
     customCommand: 'fmt'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/Todo-infra-setup'
+    workingDirectory: '$(working_path)'
     outputTo: 'console'
-    environmentServiceNameAzureRM: 'sp-1'
+    environmentServiceNameAzureRM: '$(service_connection)'
 
+# Terraform Validate
 - task: TerraformTask@5
+  displayName: 'Terraform Validate'
   inputs:
     provider: 'azurerm'
     command: 'validate'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/Todo-infra-setup'
-    environmentServiceNameAzureRM: 'sp-1'
+    workingDirectory: '$(working_path)'
+    environmentServiceNameAzureRM: '$(service_connection)'
 
+# Terraform Plan
 - task: TerraformTask@5
+  displayName: 'Terraform Plan'
   inputs:
     provider: 'azurerm'
     command: 'plan'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/Todo-infra-setup'
-    environmentServiceNameAzureRM: 'sp-1'
+    workingDirectory: '$(working_path)'
+    environmentServiceNameAzureRM: '$(service_connection)'
 
+# Terraform Apply
 - task: TerraformTask@5
+  displayName: 'Terraform Apply'
   inputs:
     provider: 'azurerm'
     command: 'apply'
-    workingDirectory: '$(System.DefaultWorkingDirectory)/Todo-infra-setup'
-    environmentServiceNameAzureRM: 'sp-1'
+    workingDirectory: '$(working_path)'
+    environmentServiceNameAzureRM: '$(service_connection)'
